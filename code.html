@@ -1174,4 +1174,43 @@
         });
     })();
     </script>
+<!-- Universal mobile UX: prevent left-right page drift + auto-add swipe indicators to all snap-x carousels -->
+<style>
+html, body { overflow-x: clip; }
+.auto-carousel-indicator { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 1.5rem auto 0; max-width: 320px; padding: 0 16px; }
+.auto-carousel-indicator-bar { flex: 1; height: 2px; background: rgba(128,128,128,0.2); border-radius: 2px; position: relative; overflow: hidden; }
+.auto-carousel-indicator-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: currentColor; transition: width 0.18s cubic-bezier(0.22,1,0.36,1); }
+.auto-carousel-indicator-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-family: inherit; transition: opacity 0.4s ease; opacity: 0.55; }
+@media (min-width: 768px) { .auto-carousel-indicator { display: none; } }
+</style>
+<script>
+(() => {
+  const init = () => document.querySelectorAll('.snap-x').forEach(track => {
+    if (track.dataset.indicatorMounted) return;
+    track.dataset.indicatorMounted = '1';
+    if (track.scrollWidth <= track.clientWidth + 10) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'auto-carousel-indicator';
+    wrap.setAttribute('aria-hidden', 'true');
+    const bar = document.createElement('div'); bar.className = 'auto-carousel-indicator-bar';
+    const fill = document.createElement('div'); fill.className = 'auto-carousel-indicator-fill';
+    bar.appendChild(fill);
+    const label = document.createElement('span'); label.className = 'auto-carousel-indicator-label'; label.textContent = 'Swipe →';
+    wrap.appendChild(bar); wrap.appendChild(label);
+    track.parentNode.insertBefore(wrap, track.nextSibling);
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const pct = max > 0 ? Math.min(100, (track.scrollLeft / max) * 100) : 0;
+      fill.style.width = pct + '%';
+      label.style.opacity = pct > 4 ? '0' : '0.55';
+    };
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  setTimeout(init, 1500);
+})();
+</script>
 </body></html>
