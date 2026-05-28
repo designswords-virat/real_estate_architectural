@@ -326,17 +326,62 @@
         .gallery-divider.in::after { width: 100%; }
 
         /* ============================================================
+           SECTION 6 (anchor) · ARCHITECTURAL NUANCE — full-viewport sticky horizontal scroll
+           (modern's Selected Projects pattern, ported here)
+           ============================================================ */
+        .nuance-section { position: relative; }
+        .nuance-pin-wrap { position: relative; }
+        .nuance-pin-inner { position: relative; }
+        .nuance-track-wrap { overflow: hidden; }
+        .nuance-track { will-change: transform; }
+        .nuance-card { position: relative; }
+        .nuance-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: rgba(15, 15, 15, 0.25);
+            border: 0; padding: 0; cursor: pointer;
+            transition: background 0.4s cubic-bezier(0.22,1,0.36,1),
+                        width 0.4s cubic-bezier(0.22,1,0.36,1),
+                        border-radius 0.4s cubic-bezier(0.22,1,0.36,1);
+        }
+        .nuance-dot.active {
+            background: #0f0f0f;
+            width: 28px;
+            border-radius: 6px;
+        }
+        .nuance-dot:hover { background: rgba(15, 15, 15, 0.55); }
+        @media (min-width: 768px) {
+            /* 4 cards → wrap height = 400vh. Sticky 100vh; remaining 300vh drives horizontal transform. */
+            .nuance-pin-wrap { height: 400vh; }
+            .nuance-pin-inner {
+                position: sticky; top: 0;
+                height: 100vh;
+                width: 100%;
+                overflow: hidden;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .nuance-pin-wrap { height: auto !important; }
+            .nuance-pin-inner { position: static !important; height: auto !important; overflow: visible !important; }
+            .nuance-track { transform: none !important; }
+            .nuance-track-wrap { overflow-x: auto !important; }
+        }
+
+        /* ============================================================
            SECTION 7 · SPATIAL STORYTELLING — image clip + void card slide
            ============================================================ */
+        /* One-shot CSS reveal — guaranteed visible even if the IO never fires (script error, timing).
+           IO can still add .in faster but no visual difference. */
         .story-img {
             clip-path: inset(100% 0 0 0);
-            transition: clip-path 1.2s cubic-bezier(0.85,0,0.15,1);
+            animation: story-img-reveal 1.4s cubic-bezier(0.85,0,0.15,1) 0.5s forwards;
+        }
+        @keyframes story-img-reveal {
+            to { clip-path: inset(0 0 0 0); }
         }
         .story-img.in { clip-path: inset(0 0 0 0); }
-        /* Mobile / touch: skip the wipe — IO can be late on small viewports and the
-           empty image area reads as dead blank space until it fires. Show by default. */
         @media (max-width: 767px), (hover: none) {
-            .story-img { clip-path: inset(0 0 0 0); }
+            .story-img { clip-path: inset(0 0 0 0); animation: none; }
         }
         .story-void {
             opacity: 0; transform: translate(20px, 20px);
@@ -590,7 +635,7 @@
 <div class="work-img-wrap absolute inset-0">
 <img loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="The Nordic Monolith — a modern urban development with clean minimalist concrete and glass lines, brutalist yet elegant, under soft cinematic daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfn4act9Vs2Os78RTBYMpoGAxqjESptn0wHmoAO4DitMr9lYPE6-rGDWlg5KgZi67KASg9U0u4YheikcVzKMfOrZVnyXjfVyw0We_2DQ_Q1R2NpsRTJbJDp-rw5E3zrKjp43ydyO7HNDpFQBWk6eqHichkZehZ17Lr8YGUqBFC3lbHm4T_sIN-fsVZkAR7nrBqVbMDTW1p_3RiCTcDS2knxZAo0OOgNJHQ7GeaZtY8yvIU5qlhGIZFTpFl1PLp2Tx7ItMjED0DqgeV"/>
 </div>
-<div class="work-tag relative z-10 bg-primary p-5 md:p-6 text-white self-start max-w-full">
+<div class="work-tag relative z-10 bg-primary p-5 md:p-6 text-white w-full">
 <p class="font-label-caps text-[10px] mb-2 opacity-70">OSLO, NORWAY</p>
 <h4 class="font-headline-md text-xl md:text-2xl uppercase font-bold leading-tight">The Nordic Monolith</h4>
 </div>
@@ -600,7 +645,7 @@
 <div class="work-img-wrap absolute inset-0">
 <img loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="The Zen Pavilion — an interior view of a minimalist architectural space with sharp geometric forms, raw concrete textures and warm wood accents under focused cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWFW2A59JpJ6brpgLCJQQfi6NN9wqxsOxf7zug2cbxAJj-qdTPfKcwugnFjqGRQ9FgqAAhsRiQCRQQ6f2JlLG33URxu8gl-i76GODyxkaCKSEUAJ0cic1m3MDILeUH5n3-ZHI1xIeiaHFvkgN7M1Iv6iZC1sjn1uCWExGJQwjtHwRLim-UF19l9BdVel4ZPuK0uAxZ9CCrM3sjMaNSXSi7tnvDL97j4prNFykkODeibs-5mkjQC9_oGv-2K9mEyONp19189NbA6Cec"/>
 </div>
-<div class="work-tag relative z-10 bg-primary p-5 md:p-6 text-white self-start max-w-full">
+<div class="work-tag relative z-10 bg-primary p-5 md:p-6 text-white w-full">
 <p class="font-label-caps text-[10px] mb-2 opacity-70">KYOTO, JAPAN</p>
 <h4 class="font-headline-md text-xl md:text-2xl uppercase font-bold leading-tight">The Zen Pavilion</h4>
 </div>
@@ -619,34 +664,59 @@
 </div>
 </div>
 </section>
-<!-- Section 5: Horizontal Gallery -->
-<section class="py-16 md:py-[160px] overflow-hidden bg-background">
-<div class="px-margin-mobile md:px-margin-desktop mb-10 md:mb-12 flex items-center gap-4">
-<div class="gallery-divider h-[1px] flex-grow"></div>
-<span class="font-label-caps text-label-caps uppercase">Architectural Nuance</span>
-<div class="gallery-divider h-[1px] flex-grow"></div>
+<!-- Section 5: Architectural Nuance — full-viewport sticky horizontal scroll (4 cards) -->
+<section id="nuance" class="nuance-section bg-background">
+<div class="nuance-pin-wrap">
+<div class="nuance-pin-inner">
+<!-- Header — relative on mobile (above cards), absolute overlay on desktop -->
+<div class="nuance-header relative px-margin-mobile pt-12 pb-6 max-w-3xl z-20 md:absolute md:top-16 md:left-margin-desktop md:px-0 md:pt-0 md:pb-0 md:pointer-events-none">
+<span class="font-label-caps text-label-caps text-secondary uppercase mb-3 block md:text-white md:drop-shadow-lg">Architectural Nuance</span>
+<h2 class="font-headline-md text-2xl md:text-headline-md text-primary md:text-white md:drop-shadow-2xl leading-tight">Four chapters in the language of form.</h2>
 </div>
-<div class="flex overflow-x-auto no-scrollbar px-margin-mobile md:px-margin-desktop gap-8 pb-6 md:pb-12 cursor-grab active:cursor-grabbing select-none scroll-snap-type-x snap-x snap-mandatory" id="horizontalScroll" data-drag-cursor>
-<div class="gallery-item w-[78vw] sm:w-[60vw] md:w-[480px] aspect-video bg-surface-container relative shrink-0 snap-start" data-gallery-item>
-<img loading="lazy" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 pointer-events-none" alt="A structural detail of a modern concrete facade — heavy mass and light glass intersecting under long morning shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAzu5zbTXvSAs4VpT0zdo_hucy4I3BCxqcrZ4uitQthZNY0e-xZNp8OpSTHrFPzQewAnTBx9HfEBfFYn4SszY5BzGDwQWJe91aGT48b351FH9dm_BZGJKGLz5QRoO47qrTxymRoRqdbEwhlAaTZ0QBiPcqCy4i7Eab9tatxzbiwTBCCWpJK0ymlpOBhYwh6OuXhWy0nSxPymZR9-_WBHpQApGCKwrjHWix5dqWwhxVSnnZS8mK4C20XX46bDQfPSeoQomnYFxETLSH"/>
+<!-- Cards track: full-width mobile (h-[65vh]), full-viewport desktop (h-screen) -->
+<div class="nuance-track-wrap">
+<div class="nuance-track flex gap-0 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory md:snap-none select-none" id="nuance-scroll">
+<!-- Card 1: Brutalist form -->
+<figure class="nuance-card snap-start flex-none w-screen h-[65vh] md:h-screen">
+<img loading="lazy" class="absolute inset-0 w-full h-full object-cover" alt="A structural detail of a modern concrete facade — heavy mass and light glass intersecting under long morning shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAzu5zbTXvSAs4VpT0zdo_hucy4I3BCxqcrZ4uitQthZNY0e-xZNp8OpSTHrFPzQewAnTBx9HfEBfFYn4SszY5BzGDwQWJe91aGT48b351FH9dm_BZGJKGLz5QRoO47qrTxymRoRqdbEwhlAaTZ0QBiPcqCy4i7Eab9tatxzbiwTBCCWpJK0ymlpOBhYwh6OuXhWy0nSxPymZR9-_WBHpQApGCKwrjHWix5dqWwhxVSnnZS8mK4C20XX46bDQfPSeoQomnYFxETLSH"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/35 pointer-events-none"></div>
+<figcaption class="absolute bottom-6 left-margin-mobile md:bottom-32 md:left-margin-desktop bg-white p-6 md:p-8 max-w-md z-10">
+<p class="font-label-caps text-label-caps text-secondary uppercase mb-2">Chapter 01</p>
+<h4 class="font-headline-md text-xl md:text-3xl text-primary uppercase">Brutalist Form</h4>
+</figcaption>
+</figure>
+<!-- Card 2: Quote -->
+<figure class="nuance-card snap-start flex-none w-screen h-[65vh] md:h-screen bg-surface-container-low flex items-center justify-center px-margin-mobile md:px-margin-desktop">
+<blockquote class="font-quote text-xl md:text-3xl lg:text-5xl text-center text-primary leading-snug max-w-4xl">
+"Architecture is the learned game, correct and magnificent, of forms assembled in the light."
+</blockquote>
+</figure>
+<!-- Card 3: Living Geometry -->
+<figure class="nuance-card snap-start flex-none w-screen h-[65vh] md:h-screen">
+<img loading="lazy" class="absolute inset-0 w-full h-full object-cover" alt="An architectural complex where clean white structural slabs interact with lush green landscaping in high-key cinematic light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfn4act9Vs2Os78RTBYMpoGAxqjESptn0wHmoAO4DitMr9lYPE6-rGDWlg5KgZi67KASg9U0u4YheikcVzKMfOrZVnyXjfVyw0We_2DQ_Q1R2NpsRTJbJDp-rw5E3zrKjp43ydyO7HNDpFQBWk6eqHichkZehZ17Lr8YGUqBFC3lbHm4T_sIN-fsVZkAR7nrBqVbMDTW1p_3RiCTcDS2knxZAo0OOgNJHQ7GeaZtY8yvIU5qlhGIZFTpFl1PLp2Tx7ItMjED0DqgeV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/35 pointer-events-none"></div>
+<figcaption class="absolute bottom-6 left-margin-mobile md:bottom-32 md:left-margin-desktop bg-white p-6 md:p-8 max-w-md z-10">
+<p class="font-label-caps text-label-caps text-secondary uppercase mb-2">Chapter 02</p>
+<h4 class="font-headline-md text-xl md:text-3xl text-primary uppercase">Living Geometry</h4>
+</figcaption>
+</figure>
+<!-- Card 4: Structural Integrity tagline -->
+<figure class="nuance-card snap-start flex-none w-screen h-[65vh] md:h-screen bg-primary text-white flex flex-col items-center justify-center gap-8 px-margin-mobile md:px-margin-desktop">
+<span class="material-symbols-outlined text-6xl md:text-8xl" aria-hidden="true">architecture</span>
+<h4 class="font-headline-md text-2xl md:text-headline-lg text-center max-w-2xl uppercase tracking-tight">Structural Integrity. Always.</h4>
+</figure>
 </div>
-<div class="gallery-item w-[64vw] sm:w-[44vw] md:w-[320px] aspect-[3/4] bg-surface-container flex items-center justify-center p-8 md:p-12 border border-primary/5 shrink-0 snap-start" data-gallery-item style="transition-delay: 100ms;">
-<blockquote class="font-quote text-base md:text-quote text-center leading-snug">"Architecture is the learned game, correct and magnificent, of forms assembled in the light."</blockquote>
 </div>
-<div class="gallery-item w-[88vw] sm:w-[68vw] md:w-[640px] aspect-video bg-surface-container relative shrink-0 snap-start" data-gallery-item style="transition-delay: 200ms;">
-<img loading="lazy" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 pointer-events-none" alt="An architectural complex where clean white structural slabs interact with lush green landscaping in high-key cinematic light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfn4act9Vs2Os78RTBYMpoGAxqjESptn0wHmoAO4DitMr9lYPE6-rGDWlg5KgZi67KASg9U0u4YheikcVzKMfOrZVnyXjfVyw0We_2DQ_Q1R2NpsRTJbJDp-rw5E3zrKjp43ydyO7HNDpFQBWk6eqHichkZehZ17Lr8YGUqBFC3lbHm4T_sIN-fsVZkAR7nrBqVbMDTW1p_3RiCTcDS2knxZAo0OOgNJHQ7GeaZtY8yvIU5qlhGIZFTpFl1PLp2Tx7ItMjED0DqgeV"/>
+<!-- Dots — normal flow below carousel on mobile, absolute overlay on desktop -->
+<div class="nuance-nav relative py-8 flex items-center justify-center px-margin-mobile md:absolute md:bottom-12 md:left-0 md:right-0 md:z-20 md:py-0 md:px-margin-desktop md:pointer-events-none">
+<div class="nuance-dots flex items-center gap-3 md:pointer-events-auto" role="tablist" aria-label="Architectural Nuance chapters">
+<button class="nuance-dot active" type="button" data-nuance-dot="0" role="tab" aria-label="Chapter 1 of 4"></button>
+<button class="nuance-dot" type="button" data-nuance-dot="1" role="tab" aria-label="Chapter 2 of 4"></button>
+<button class="nuance-dot" type="button" data-nuance-dot="2" role="tab" aria-label="Chapter 3 of 4"></button>
+<button class="nuance-dot" type="button" data-nuance-dot="3" role="tab" aria-label="Chapter 4 of 4"></button>
 </div>
-<div class="gallery-item w-[64vw] sm:w-[44vw] md:w-[420px] aspect-square bg-primary text-white p-6 md:p-12 flex flex-col justify-between shrink-0 snap-start" data-gallery-item style="transition-delay: 300ms;">
-<span class="material-symbols-outlined text-4xl md:text-5xl" aria-hidden="true">architecture</span>
-<h4 class="font-headline-md text-lg md:text-headline-md leading-tight">Structural Integrity. Always.</h4>
 </div>
 </div>
-<!-- Gallery progress bar -->
-<div class="px-margin-mobile md:px-margin-desktop mt-4 md:mt-6 flex items-center gap-4">
-<div class="gallery-progress relative h-[1px] flex-grow bg-outline-variant overflow-hidden" role="progressbar" aria-label="Gallery scroll progress">
-<div class="gallery-progress-fill absolute left-0 top-0 bottom-0 bg-primary" style="width:0;transition:width 0.2s cubic-bezier(0.22,1,0.36,1);"></div>
-</div>
-<span class="font-label-caps text-[10px] tracking-widest text-secondary uppercase whitespace-nowrap"><span id="gallery-current">01</span> / <span id="gallery-total">04</span></span>
 </div>
 </section>
 <!-- Section 6: Spatial Storytelling -->
@@ -659,11 +729,11 @@
 <p class="font-body-md text-secondary">Spatial design is not just about the solid structures, but the intentional voids we leave behind. The space between is where life happens.</p>
 </div>
 </div>
-<div class="col-span-12 md:col-span-4 md:col-start-9 flex flex-col justify-center mt-16 md:mt-0" data-story-text>
+<div class="col-span-12 md:col-span-4 md:col-start-9 flex flex-col justify-center mt-8 md:mt-0" data-story-text>
 <span class="font-label-caps text-label-caps text-secondary mb-4">THEORY 01</span>
-<h2 class="font-headline-lg-mobile md:text-headline-md mb-8 tracking-tight">Atmospheric Pressure.</h2>
-<p class="font-body-lg text-on-surface mb-8">Our approach to luxury is subtractive. We remove the unnecessary to reveal the essential character of a space, using light as our primary building material.</p>
-<div class="story-line h-20 w-[1px] bg-primary"></div>
+<h2 class="font-headline-lg-mobile md:text-headline-md mb-6 md:mb-8 tracking-tight">Atmospheric Pressure.</h2>
+<p class="font-body-lg text-on-surface mb-6 md:mb-8">Our approach to luxury is subtractive. We remove the unnecessary to reveal the essential character of a space, using light as our primary building material.</p>
+<div class="story-line hidden md:block h-20 w-[1px] bg-primary"></div>
 </div>
 </div>
 </section>
@@ -938,7 +1008,7 @@
         observe('[data-work]', el => el.classList.add('in'));
         observe('[data-showcase]', el => el.classList.add('in'));
         observe('.gallery-divider', el => el.classList.add('in'));
-        observe('[data-gallery-item]', el => el.classList.add('in'));
+        /* Gallery items removed — section restructured as Architectural Nuance sticky horizontal scroll */
         observe('.story-img', el => el.classList.add('in'));
         observe('.story-void', el => el.classList.add('in'));
         observe('[data-story-text]', el => el.classList.add('in'));
@@ -997,44 +1067,71 @@
             });
         });
 
-        // ---------- Horizontal gallery drag (mouse + touch) + progress bar ----------
-        const slider = document.getElementById('horizontalScroll');
-        if (slider) {
-            let isDown = false, startX = 0, scrollLeft = 0;
-            const begin = (x) => { isDown = true; startX = x; scrollLeft = slider.scrollLeft; };
-            const move = (x, e) => {
-                if (!isDown) return;
-                if (e?.cancelable) e.preventDefault();
-                slider.scrollLeft = scrollLeft - (x - startX) * 1.6;
-            };
-            const end = () => { isDown = false; };
-            slider.addEventListener('mousedown', e => begin(e.pageX));
-            slider.addEventListener('mousemove', e => move(e.pageX, e));
-            slider.addEventListener('mouseleave', end);
-            slider.addEventListener('mouseup', end);
-            slider.addEventListener('touchstart', e => begin(e.touches[0].pageX), { passive: true });
-            slider.addEventListener('touchmove', e => move(e.touches[0].pageX, e), { passive: false });
-            slider.addEventListener('touchend', end);
+        // ---------- Architectural Nuance: pinned horizontal scroll (desktop CSS sticky + JS transform) + dots (both) ----------
+        (() => {
+            const section = document.getElementById('nuance');
+            const track = document.getElementById('nuance-scroll');
+            if (!section || !track) return;
+            const cards = Array.from(track.children);
+            const dots = section.querySelectorAll('.nuance-dot');
+            const setActive = (i) => dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
 
-            // Progress bar + counter
-            const fill = document.querySelector('.gallery-progress-fill');
-            const cur = document.getElementById('gallery-current');
-            const total = document.getElementById('gallery-total');
-            const tiles = slider.querySelectorAll('[data-gallery-item]');
-            if (total) total.textContent = String(tiles.length).padStart(2, '0');
-            const updateProgress = () => {
-                const max = slider.scrollWidth - slider.clientWidth;
-                const p = max > 0 ? slider.scrollLeft / max : 0;
-                if (fill) fill.style.width = (p * 100) + '%';
-                // Current = floor(progress * (count-1)) + 1
-                if (cur && tiles.length) {
-                    const idx = Math.min(tiles.length - 1, Math.round(p * (tiles.length - 1)));
-                    cur.textContent = String(idx + 1).padStart(2, '0');
+            // Mobile: scroll-snap → dots sync (cards are full-width, gap=0)
+            const onTrackScroll = () => {
+                if (window.innerWidth >= 768) return;
+                const w = cards[0].offsetWidth || 1;
+                const idx = Math.max(0, Math.min(cards.length - 1, Math.round(track.scrollLeft / w)));
+                setActive(idx);
+            };
+            track.addEventListener('scroll', onTrackScroll, { passive: true });
+
+            const scrollToCard = (i) => {
+                const card = cards[i];
+                if (!card) return;
+                if (window.innerWidth < 768) {
+                    track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+                } else {
+                    const wrap = section.querySelector('.nuance-pin-wrap');
+                    if (!wrap) return;
+                    const pinTop = wrap.getBoundingClientRect().top + window.scrollY;
+                    const pinHeight = wrap.offsetHeight;
+                    const progress = cards.length > 1 ? i / (cards.length - 1) : 0;
+                    const target = pinTop + (pinHeight - window.innerHeight) * progress;
+                    if (typeof lenis !== 'undefined' && lenis?.scrollTo) lenis.scrollTo(target, { duration: 1.2 });
+                    else window.scrollTo({ top: target, behavior: 'smooth' });
                 }
             };
-            slider.addEventListener('scroll', updateProgress, { passive: true });
-            updateProgress();
-        }
+            dots.forEach((d, i) => d.addEventListener('click', () => scrollToCard(i)));
+
+            // Desktop: CSS sticky + JS scroll-driven horizontal transform
+            let ticking = false;
+            const onPageScroll = () => {
+                if (window.innerWidth < 768 || reduceMotion) return;
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => {
+                    ticking = false;
+                    const wrap = section.querySelector('.nuance-pin-wrap');
+                    if (!wrap) return;
+                    const rect = wrap.getBoundingClientRect();
+                    const total = wrap.offsetHeight - window.innerHeight;
+                    if (total <= 0) return;
+                    const scrolled = Math.max(0, Math.min(total, -rect.top));
+                    const progress = scrolled / total;
+                    const cardW = cards[0].offsetWidth;
+                    const distance = (cards.length - 1) * cardW;
+                    track.style.transform = `translate3d(${-progress * distance}px, 0, 0)`;
+                    const i = Math.min(cards.length - 1, Math.round(progress * (cards.length - 1)));
+                    setActive(i);
+                });
+            };
+            window.addEventListener('scroll', onPageScroll, { passive: true });
+            window.addEventListener('resize', () => {
+                if (window.innerWidth < 768) track.style.transform = '';
+                onPageScroll();
+            });
+            onPageScroll();
+        })();
 
         // ---------- Smooth anchor scroll fallback ----------
         document.querySelectorAll('a[href^="#"]').forEach(a => {
